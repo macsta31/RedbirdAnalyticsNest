@@ -2,11 +2,21 @@
     import type { LayoutData } from './$types';
     import "../styles.css"
     export let data: LayoutData;
+    import { sideOfBall } from '$lib/ballsStore';
+
+    function setSide(side:string){
+        sideOfBall.set(side)
+    }
+
 </script>
 
 <main>
     <header>
         <h1>Redbirds Analytics Nest</h1>
+        <nav>
+            <li><button on:click={() => setSide('offence')} >Offence</button></li>
+            <li><button on:click={() => setSide('defence')} >Defence</button></li>
+        </nav>
     </header>
     <div>
         <slot />
@@ -21,7 +31,10 @@
     header{
         background-color:var(--primary);
         padding: 1rem;
-        display: grid;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
         place-content: center;
     }
 
@@ -44,5 +57,20 @@
         padding: 2rem;
         font-size: 0.75rem;
         border-top: 1px solid rgb(174, 174, 174);
+    }
+
+    nav{
+        list-style-type: none;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        gap:1rem;
+        width: 100%;
+    }
+
+    button{
+        background-color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 1rem;
     }
 </style>
