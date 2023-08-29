@@ -1,4 +1,8 @@
-<script lang="ts">
+
+<script>
+// @ts-nocheck
+
+  
   import { onMount } from "svelte";
   import "../styles.css";
   import { sideOfBall } from "$lib/ballsStore";
@@ -251,61 +255,77 @@
   //     currentOption = option;
   // }
   let currentKey = Object.keys(data)[0]; // Default to first key
+  //@ts-ignore
   let currentSubKey = Object.keys(data[currentKey])[0]; // Default to first sub-key
+  //@ts-ignore
   let currentSubData = data[currentKey][currentSubKey];
 
+  /**
+   * @param {string} key
+   */
   function setKey(key) {
     currentKey = key;
+    //@ts-ignore
     currentSubKey = Object.keys(data[currentKey])[0]; // Reset subKey when changing main key
+    //@ts-ignore
     currentSubData = data[currentKey][currentSubKey];
   }
 
+  /**
+   * @param {string} subKey
+   */
   function setSubKey(subKey) {
     currentSubKey = subKey;
+    //@ts-ignore
     currentSubData = data[currentKey][currentSubKey];
   }
 </script>
 
 <main>
-  <!-- Navigation Buttons -->
-  <div class="situations">
-    {#each Object.keys(data) as key}
-      <button
-        on:click={() => setKey(key)}
-        class={currentKey === key ? "selected" : ""}>{key}</button
-      >
-    {/each}
-  </div>
+  {#if $sideOfBall === 'offence'}
+    <!-- Navigation Buttons -->
+    <div class="situations">
+      {#each Object.keys(data) as key}
+        <button
+          on:click={() => setKey(key)}
+          class={currentKey === key ? "selected" : ""}>{key}</button
+        >
+      {/each}
+    </div>
 
-  <!-- Sub-Navigation Buttons -->
-  <div class="subSituations">
-    {#each Object.keys(data[currentKey]) as subKey}
-      <button
-        on:click={() => setSubKey(subKey)}
-        class={currentSubKey === subKey ? "selected" : ""}>{subKey}</button
-      >
-    {/each}
-  </div>
+    <!-- Sub-Navigation Buttons -->
+    <div class="subSituations">
+      {#each Object.keys(data[currentKey]) as subKey}
+        <button
+          on:click={() => setSubKey(subKey)}
+          class={currentSubKey === subKey ? "selected" : ""}>{subKey}</button
+        >
+      {/each}
+    </div>
 
-  <!-- Displaying Data -->
-  <table>
-    <thead>
-      <tr>
-        {#each Object.keys(currentSubData) as columnKey}
-          <th>{columnKey}</th>
-        {/each}
-      </tr>
-    </thead>
-    <tbody>
-      {#each Object.keys(currentSubData[Object.keys(currentSubData)[0]]) as rowIndex}
+    <!-- Displaying Data -->
+    <table>
+      <thead>
         <tr>
           {#each Object.keys(currentSubData) as columnKey}
-            <td>{currentSubData[columnKey][rowIndex]}</td>
+            <th>{columnKey}</th>
           {/each}
         </tr>
-      {/each}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {#each Object.keys(currentSubData[Object.keys(currentSubData)[0]]) as rowIndex}
+          <tr>
+            {#each Object.keys(currentSubData) as columnKey}
+              <td>{currentSubData[columnKey][rowIndex]}</td>
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  
+{:else}
+  <p>Defence</p>
+{/if}
 </main>
 
 <style>
@@ -330,40 +350,13 @@
     gap: 2rem;
   }
 
-  .upload {
-    width: 100%;
-    border: 1px solid black;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  label {
-    display: flex;
-    gap: 1rem;
-    font-size: 1.5rem;
-  }
 
   button {
     width: max-content;
     background-color: var(--primary);
     padding: 0.5rem 1rem;
     border-radius: 1rem;
-    font-size: 1.5rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-  }
-
-  input {
     font-size: 1.5rem;
   }
   .selected {

@@ -2,8 +2,12 @@
     import type { LayoutData } from './$types';
     import "../styles.css"
     export let data: LayoutData;
+    import { dev } from '$app/environment';
+    import { inject } from '@vercel/analytics';
     import { sideOfBall } from '$lib/ballsStore';
-
+ 
+    inject({ mode: dev ? 'development' : 'production' });
+    
     function setSide(side:string){
         sideOfBall.set(side)
     }
